@@ -7,8 +7,7 @@ edition = "2018"
 
 [dependencies]
 advtools = { git = "https://github.com/birkenfeld/advtools" }
-petgraph = "*"
-odds = "*"
+#petgraph = "*"
 #rayon = "*"
 #md-5 = "*"
 #strum = "*"
