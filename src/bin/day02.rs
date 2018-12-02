@@ -1,8 +1,8 @@
-use advtools::prelude::*;
-use advtools::itertools::izip;
+use advtools::prelude::{Itertools, HashMap, itertools::izip};
+use advtools::input::iter_input;
 
 fn main() {
-    let ids = advtools::iter_input::<String>().collect_vec();
+    let ids = iter_input::<String>().collect_vec();
     // Using fold here lets us keep track of the doubles/triples state
     // in the iterator without mutable outer variables.
     let (doubles, triples) = ids.iter().fold((0, 0), |(dbls, tpls), id| {

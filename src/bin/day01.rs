@@ -1,8 +1,9 @@
-use advtools::prelude::*;
+use advtools::prelude::{Itertools, HashSet};
+use advtools::input::iter_input;
 
 fn main() {
     // Let the helper library parse all lines and collect them.
-    let changes = advtools::iter_input::<i32>().collect_vec();
+    let changes = iter_input::<i32>().collect_vec();
     // The first part is perfect for a fold(), nothing special going on.
     let freq1 = changes.iter().fold(0, |v, n| v + n);
     println!("First round: {}", freq1);
