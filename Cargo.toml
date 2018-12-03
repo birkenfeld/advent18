@@ -6,7 +6,7 @@ authors = ["Georg Brandl <georg@python.org>"]
 edition = "2018"
 
 [dependencies]
-advtools = { git = "https://github.com/birkenfeld/advtools" }
+advtools = "0.2"
 #petgraph = "*"
 #rayon = "*"
 #md-5 = "*"

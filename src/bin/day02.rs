@@ -1,4 +1,4 @@
-use advtools::prelude::{Itertools, HashMap, itertools::izip};
+use advtools::prelude::{Itertools, HashMap};
 use advtools::input::iter_input;
 
 fn main() {
@@ -16,18 +16,13 @@ fn main() {
     });
     println!("Checksum: {}", doubles * triples);
 
-    // This part makes heavy use of the goodies in itertools.
     // tuple_combinations() example: [a, b, c] -> (a, b), (a, c), (b, c)
     for (id, id2) in ids.iter().tuple_combinations() {
-        // izip! lets us zip more than one iterator without nesting pairs.
-        let chars = izip!(0.., id.chars(), id2.chars());
-        // collect_tuple() returns `Some` only if there is the exact number of
-        // items.  In this case, we want to find two IDs with exactly *one*
-        // differing position.
-        if let Some(((n, ..),)) = chars.filter(|&(_, a, b)| a != b).collect_tuple() {
-            // Take out the differing item and reconstruct a string.
-            let others: String = id.chars().take(n).chain(id.chars().skip(n+1)).collect();
-            println!("Common ID: {}", others);
+        // Make a new string with only common characters.
+        let only_commons: String = id.chars().zip(id2.chars()).filter_map(
+            |(a, b)| if a == b { Some(a) } else { None }).collect();
+        if only_commons.len() == id.len() - 1 {
+            println!("Common ID: {}", only_commons);
             return;
         }
     }
