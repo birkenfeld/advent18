@@ -6,7 +6,7 @@ authors = ["Georg Brandl <georg@python.org>"]
 edition = "2018"
 
 [dependencies]
-advtools = "0.2"
+advtools = "0.2.1"
 #petgraph = "*"
 #rayon = "*"
 #md-5 = "*"

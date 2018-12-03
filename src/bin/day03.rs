@@ -1,10 +1,10 @@
-use advtools::prelude::{Itertools, HashMap, HashSet};
+use advtools::prelude::{Itertools, HashMap, HashSet, ArrayVec};
 use advtools::input::{iter_input_trim, to_u32};
 
 fn main() {
     // Parse the input into a hash map of claimed squares mapping to the
     // IDs of the claims.
-    let mut claimed = HashMap::<_, Vec<u32>>::default();
+    let mut claimed = HashMap::<_, ArrayVec<[u32; 8]>>::default();
     let mut all_ids = HashSet::default();
     for line in iter_input_trim::<Vec<String>>("#:") {
         let id = to_u32(&line[0]);
