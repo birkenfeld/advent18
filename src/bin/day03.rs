@@ -1,15 +1,13 @@
 use advtools::prelude::{Itertools, HashMap, HashSet, ArrayVec};
-use advtools::input::{iter_input_trim, to_u32};
+use advtools::input::iter_input_regex;
 
 fn main() {
     // Parse the input into a hash map of claimed squares mapping to the
     // IDs of the claims.
-    let mut claimed = HashMap::<_, ArrayVec<[u32; 8]>>::default();
+    let mut claimed = HashMap::<(u32, u32), ArrayVec<[u16; 8]>>::default();
     let mut all_ids = HashSet::default();
-    for line in iter_input_trim::<Vec<String>>("#:") {
-        let id = to_u32(&line[0]);
-        let (x, y) = line[2].split(',').map(to_u32).collect_tuple().unwrap();
-        let (w, h) = line[3].split('x').map(to_u32).collect_tuple().unwrap();
+    for (id, x, y, w, h) in iter_input_regex(r#"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)"#) {
+        let (w, h): (u32, u32) = (w, h);
         for i in x..x+w {
             for j in y..y+h {
                 claimed.entry((i, j)).or_default().push(id);
