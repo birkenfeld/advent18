@@ -6,7 +6,7 @@ fn main() {
     // IDs of the claims.
     let mut claimed = HashMap::<(u32, u32), ArrayVec<[u16; 8]>>::default();
     let mut all_ids = HashSet::default();
-    for (id, x, y, w, h) in iter_input_regex(r#"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)"#) {
+    for (id, x, y, w, h) in iter_input_regex(r"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)") {
         let (w, h): (u32, u32) = (w, h);
         for i in x..x+w {
             for j in y..y+h {
