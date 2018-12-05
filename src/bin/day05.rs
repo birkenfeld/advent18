@@ -4,20 +4,14 @@ fn reacts(a: char, b: char) -> bool {
     a != b && a.to_ascii_lowercase() == b.to_ascii_lowercase()
 }
 
-fn reduce(polymer: &str, without: Option<char>) -> usize {
-    let mut output = Vec::new();
-    // One pass over the input is enough, if we always keep track if the
-    // last pushed and the new unit react.
-    for ch in polymer.chars() {
-        if Some(ch.to_ascii_lowercase()) == without {
-            // ignore this
-        } else if reacts(ch, output.last().cloned().unwrap_or_default()) {
-            output.pop();
-        } else {
-            output.push(ch);
-        }
-    }
-    output.len()
+fn reduce(polymer: &str, skip: Option<char>) -> usize {
+    // One pass over the input is enough, if we always keep track if the last
+    // pushed and the new unit react.
+    polymer.chars().fold(vec!(), |mut stack, ch| match stack.last().cloned() {
+        _ if skip == Some(ch.to_ascii_lowercase()) => stack,
+        Some(pch) if reacts(pch, ch) => { stack.pop(); stack }
+        _                            => { stack.push(ch); stack }
+    }).len()
 }
 
 fn main() {
