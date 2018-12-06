@@ -1,16 +1,16 @@
 use advtools::input::input_string;
 
 fn reacts(a: char, b: char) -> bool {
-    a != b && a.to_ascii_lowercase() == b.to_ascii_lowercase()
+    a != b && a.eq_ignore_ascii_case(&b)
 }
 
 fn reduce(polymer: &str, skip: Option<char>) -> usize {
     // One pass over the input is enough, if we always keep track if the last
     // pushed and the new unit react.
-    polymer.chars().fold(vec!(), |mut stack, ch| match stack.last().cloned() {
+    polymer.chars().fold(vec!(), |mut stack, ch| match stack.last() {
         _ if skip == Some(ch.to_ascii_lowercase()) => stack,
-        Some(pch) if reacts(pch, ch) => { stack.pop(); stack }
-        _                            => { stack.push(ch); stack }
+        Some(&pch) if reacts(pch, ch) => { stack.pop(); stack }
+        _                             => { stack.push(ch); stack }
     }).len()
 }
 
