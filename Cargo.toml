@@ -7,9 +7,5 @@ edition = "2018"
 
 [dependencies]
 advtools = "0.2.2"
-#petgraph = "*"
-#rayon = "*"
-#md-5 = "*"
-#strum = "*"
-#strum_macros = "*"
-#itoa = "*"
+# not released yet since we need externals() on stable graphs
+petgraph = { git = "https://github.com/bluss/petgraph" }
