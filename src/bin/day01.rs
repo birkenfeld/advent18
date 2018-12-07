@@ -8,7 +8,7 @@ fn main() {
     let freq1 = changes.iter().fold(0, |v, n| v + n);
     println!("First round: {}", freq1);
 
-    let (mut freq2, mut seen) = (0, HashSet::default());
+    let (mut freq2, mut seen) = (0, HashSet::new());
     // Here we use the fact that `HashSet::insert` returns false if the
     // key was already in the set. cycle() is another nice iterator method.
     changes.into_iter().cycle().find(|d| { freq2 += d; !seen.insert(freq2) });

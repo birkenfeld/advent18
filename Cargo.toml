@@ -6,6 +6,6 @@ authors = ["Georg Brandl <georg@python.org>"]
 edition = "2018"
 
 [dependencies]
-advtools = "0.2.2"
+advtools = "0.2.3"
 # not released yet since we need externals() on stable graphs
 petgraph = { git = "https://github.com/bluss/petgraph" }

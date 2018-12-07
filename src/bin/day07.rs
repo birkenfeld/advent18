@@ -11,7 +11,7 @@ struct Task {
 fn main() {
     // Create a directed graph where node weights are the assigned letter.
     let mut graph = StableGraph::new();
-    let mut nodes = HashMap::default();
+    let mut nodes = HashMap::new();
     for (a, b) in iter_input_parts::<(char, char), _>((1, 7)) {
         let na = *nodes.entry(a).or_insert_with(|| graph.add_node(a));
         let nb = *nodes.entry(b).or_insert_with(|| graph.add_node(b));

@@ -31,8 +31,8 @@ impl SleepMinutes {
 }
 
 fn main() {
-    let mut days = HashMap::<_, Day>::default();
-    let mut asleep = HashMap::default();
+    let mut days = HashMap::<_, Day>::new();
+    let mut asleep = HashMap::new();
     // First, collect the events for each day (needs a separate pass since
     // they are unsorted in the input).
     for line in iter_input_regex(r"\[1518-(\d+)-(\d+) (\d+):(\d+)\] (?:Guard #)?(falls|wakes|\d+)") {

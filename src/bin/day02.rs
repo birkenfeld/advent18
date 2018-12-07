@@ -6,7 +6,7 @@ fn main() {
     // Using fold here lets us keep track of the doubles/triples state
     // in the iterator without mutable outer variables.
     let (doubles, triples) = ids.iter().fold((0, 0), |(dbls, tpls), id| {
-        let mut freqs = HashMap::<_, u32>::default();
+        let mut freqs = HashMap::<_, u32>::new();
         // Determine frequency of every character in the ID using a hashmap.
         id.chars().for_each(|c| *freqs.entry(c).or_default() += 1);
         // If we find any of the needed frequency, casting the bool to u32
