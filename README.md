@@ -2,7 +2,7 @@
 
 These are Rust-language solutions for the
 [coding-challenge advent calendar](http://adventofcode.com/2018).  You'll
-need Rust (nightly until the 2018 edition is stable) and Cargo to run.
+need stable Rust 1.31 and Cargo to run.
 
 I've tried to make the solutions small and somewhat optimized for speed (so far,
 no solution takes more than about a second on an up-to-date machine).  Inputs
