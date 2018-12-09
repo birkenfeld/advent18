@@ -1,27 +1,26 @@
+use advtools::prelude::VecDeque;
 use advtools::input::iter_input_parts;
-use dlv_list::VecList;
 
 fn play(players: usize, last: u32) -> u32 {
     let mut scores = vec![0; players];
-    // This is a pretty obvious implementation of the game.
-    // The VecList datastructure is a linked list-like array that lets
-    // us insert and remove at arbitrary points pretty cheaply.
-    let mut marbles = VecList::with_capacity(last as usize);
-    let mut ix = marbles.push_front(0);
+    // This is a pretty obvious implementation of the game.  We use a deque, and
+    // the "current" marble is always the last item in the back, so to shift
+    // the current, we rotate items between front and back.
+    let mut marbles = VecDeque::with_capacity(last as usize);
+    marbles.push_front(0);
     for (m, p) in (1..=last).zip((0..players).cycle()) {
         if m % 23 == 0 {
-            for _ in 0..6 {
-                // Indices need to "roll over" when we arrive at the
-                // front of the list.
-                ix = marbles.get_previous_index(ix)
-                    .or_else(|| marbles.indices().next_back()).unwrap();
+            for _ in 0..7 {
+                let t = marbles.pop_back().unwrap();
+                marbles.push_front(t);
             }
-            let remove_ix = marbles.get_previous_index(ix).unwrap();
-            scores[p] += m + marbles.remove(remove_ix).unwrap();
+            scores[p] += m + marbles.pop_back().unwrap();
+            let t = marbles.pop_front().unwrap();
+            marbles.push_back(t);
         } else {
-            ix = marbles.get_next_index(ix)
-                .or_else(|| marbles.indices().next()).unwrap();
-            ix = marbles.insert_after(ix, m);
+            let t = marbles.pop_front().unwrap();
+            marbles.push_back(t);
+            marbles.push_back(m);
         }
     }
     scores.into_iter().max().unwrap()
