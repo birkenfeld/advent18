@@ -11,6 +11,7 @@ harness = false
 
 [dependencies]
 advtools = "0.3.0"
+dlv-list = "0.2.0"
 # not released yet since we need externals() on stable graphs
 petgraph = { git = "https://github.com/bluss/petgraph" }
 
