@@ -31,12 +31,12 @@ fn main() {
     }
 
     let max_area_size = area_sizes.into_iter().max().unwrap();
-    println!("Largest area: {}", max_area_size);
+    advtools::print("Largest area", max_area_size);
 
     // Part 2: find size of region with limited distance to all points.
     let region_size = iproduct!(0..SIZE, 0..SIZE)
         .map(|p| points.iter().map(|&pc| manhattan_dist(p, pc)).sum::<i32>())
         .filter(|&i| i < 10000)
         .count();
-    println!("Limited distance region size: {}", region_size);
+    advtools::print("Limited distance region size", region_size);
 }

@@ -25,6 +25,6 @@ fn main() {
     // This gets an ID out of the set and at the same time asserts len == 1.
     let (single_id,) = all_ids.iter().collect_tuple().unwrap();
 
-    println!("Multiply claimed: {}", multiply);
-    println!("Only non-overlapping: {}", single_id);
+    advtools::print("Multiply claimed", multiply);
+    advtools::print("Only non-overlapping", single_id);
 }

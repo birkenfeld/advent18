@@ -5,7 +5,14 @@ version = "0.1.0"
 authors = ["Georg Brandl <georg@python.org>"]
 edition = "2018"
 
+[[bench]]
+name = "days"
+harness = false
+
 [dependencies]
-advtools = "0.2.3"
+advtools = "0.3.0"
 # not released yet since we need externals() on stable graphs
 petgraph = { git = "https://github.com/bluss/petgraph" }
+
+[dev-dependencies]
+criterion = { version = "0.2.5", default-features = false }

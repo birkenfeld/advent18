@@ -25,7 +25,7 @@ fn main() {
     let mut input_iter = input.split_whitespace().map(to_usize);
 
     // Part 1: sum up metadata for all nodes.
-    println!("Sum of metadata: {}", sum_meta(&mut input_iter.clone()));
+    advtools::print("Sum of metadata", sum_meta(&mut input_iter.clone()));
     // Part 2: get the "value" of the root node.
-    println!("Value of root: {}", get_value(&mut input_iter));
+    advtools::print("Value of root", get_value(&mut input_iter));
 }

@@ -28,7 +28,7 @@ fn main() {
         let root = graph.externals(Incoming).sorted_by_key(|&n| graph[n])[0];
         order.push(graph.remove_node(root).unwrap());
     }
-    println!("Work order: {}", order);
+    advtools::print("Work order", order);
 
     // Part 2: assign tasks to workers and track required time.
     let mut clock = -1;
@@ -53,5 +53,5 @@ fn main() {
             }
         }
     }
-    println!("Seconds required: {}", clock);
+    advtools::print("Seconds required", clock);
 }
