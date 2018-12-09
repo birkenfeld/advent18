@@ -1,12 +1,12 @@
 use advtools::input::iter_input_parts;
 use dlv_list::VecList;
 
-fn play(players: usize, last: usize) -> usize {
+fn play(players: usize, last: u32) -> u32 {
     let mut scores = vec![0; players];
     // This is a pretty obvious implementation of the game.
     // The VecList datastructure is a linked list-like array that lets
     // us insert and remove at arbitrary points pretty cheaply.
-    let mut marbles = VecList::with_capacity(last);
+    let mut marbles = VecList::with_capacity(last as usize);
     let mut ix = marbles.push_front(0);
     for (m, p) in (1..=last).zip((0..players).cycle()) {
         if m % 23 == 0 {
