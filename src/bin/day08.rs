@@ -1,31 +1,26 @@
 use advtools::prelude::Itertools;
 use advtools::input::{input_string, to_usize};
 
-fn sum_meta(it: &mut impl Iterator<Item=usize>) -> usize {
+fn reduce<I, F>(it: &mut I, combine: &F) -> usize
+where I: Iterator<Item=usize>, F: Fn(&[usize], std::iter::Take<&mut I>) -> usize
+{
     let (children, meta) = it.next_tuple().unwrap();
-    (0..children).map(|_| sum_meta(it)).sum::<usize>() +
-        it.take(meta).sum::<usize>()
-}
-
-fn get_value(it: &mut impl Iterator<Item=usize>) -> usize {
-    let (children, meta) = it.next_tuple().unwrap();
-    if children == 0 {
-        it.take(meta).sum()
-    } else {
-        // Meta comes after children, so we need to determine the value
-        // for all children first.
-        let child_vals = (0..children).map(|_| get_value(it)).collect_vec();
-        it.take(meta).filter(|&i| 1 <= i && i <= children)
-                     .map(|i| child_vals[i - 1]).sum()
-    }
+    let child_results = (0..children).map(|_| reduce(it, combine)).collect_vec();
+    combine(&child_results, it.take(meta))
 }
 
 fn main() {
     let input = input_string();
-    let mut input_iter = input.split_whitespace().map(to_usize);
+    // Since we need to iterate twice over the same data, clone the iterator.
+    let mut iter1 = input.split_whitespace().map(to_usize);
+    let mut iter2 = iter1.clone();
 
     // Part 1: sum up metadata for all nodes.
-    advtools::print("Sum of metadata", sum_meta(&mut input_iter.clone()));
+    let p1 = reduce(&mut iter1, &|child, meta| child.iter().sum::<usize>() + meta.sum::<usize>());
+    advtools::print("Sum of metadata", p1);
     // Part 2: get the "value" of the root node.
-    advtools::print("Value of root", get_value(&mut input_iter));
+    let p2 = reduce(&mut iter2, &|child, meta| {
+        if child.is_empty() { meta.sum() } else { meta.filter_map(|i| child.get(i - 1)).sum() }
+    });
+    advtools::print("Value of root", p2);
 }
