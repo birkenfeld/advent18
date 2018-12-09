@@ -3,6 +3,7 @@ use advtools::input::iter_input;
 
 fn main() {
     let ids = iter_input::<String>().collect_vec();
+    let id_len = ids[0].len();
     // Using fold here lets us keep track of the doubles/triples state
     // in the iterator without mutable outer variables.
     let (doubles, triples) = ids.iter().fold((0, 0), |(dbls, tpls), id| {
@@ -17,12 +18,11 @@ fn main() {
     advtools::print("Checksum", doubles * triples);
 
     // tuple_combinations() example: [a, b, c] -> (a, b), (a, c), (b, c)
-    for (id, id2) in ids.iter().tuple_combinations() {
-        // Make a new string with only common characters.
-        let only_commons: String = id.chars().zip(id2.chars()).filter_map(
-            |(a, b)| if a == b { Some(a) } else { None }).collect();
-        if only_commons.len() == id.len() - 1 {
-            return advtools::print("Common ID", only_commons);
-        }
-    }
+    let new_id = ids.iter().tuple_combinations().map(|(id, id2)| {
+        // For each combination, make a new string with only common characters.
+        id.chars().zip(id2.chars())
+                  .filter_map(|(a, b)| if a == b { Some(a) } else { None })
+                  .collect::<String>()
+    }).find(|v| v.len() == id_len - 1).unwrap();
+    advtools::print("Common ID", new_id);
 }
