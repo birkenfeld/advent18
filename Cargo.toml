@@ -10,7 +10,7 @@ name = "days"
 harness = false
 
 [dependencies]
-advtools = "0.3.0"
+advtools = { version = "0.4.0", path = "../advtools" }
 # not released yet since we need externals() on stable graphs
 petgraph = { git = "https://github.com/bluss/petgraph" }
 

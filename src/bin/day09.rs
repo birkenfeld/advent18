@@ -27,7 +27,7 @@ fn play(players: usize, last: u32) -> u32 {
 }
 
 fn main() {
-    let (players, last) = iter_input_parts((0, 6)).next().unwrap();
+    let (players, last) = iter_input_parts([0, 6]).next().unwrap();
     advtools::print("Normal", play(players, last));
     advtools::print("100x longer", play(players, 100*last));
 }
