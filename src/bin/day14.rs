@@ -13,11 +13,12 @@ fn main() {
 
     loop {
         let scores = (stack[pos.0], stack[pos.1]);
-        let sum_scores = scores.0 + scores.1;
+        let mut sum_scores = scores.0 + scores.1;
         if sum_scores >= 10 {
-            stack.push(sum_scores / 10);
+            stack.push(1);
+            sum_scores -= 10;
         }
-        stack.push(sum_scores % 10);
+        stack.push(sum_scores);
 
         let n = stack.len();
         pos.0 = (pos.0 + 1 + scores.0 as usize) % n;
