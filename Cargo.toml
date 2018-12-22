@@ -15,6 +15,7 @@ advtools = { version = "0.4.0", path = "../advtools" }
 petgraph = { git = "https://github.com/bluss/petgraph" }
 strum = "0.12.0"
 strum_macros = "0.12.0"
+priority-queue = "0.5.2"
 
 [dev-dependencies]
 criterion = { version = "0.2.5", default-features = false }
