@@ -85,7 +85,8 @@ fn find_targets(player: &Player, map: &Map<Square>) -> (i32, Vec<(Pos, Pos)>) {
         }
         positions = new_positions;
         if seen.len() == seen_count {
-            return (min, targets.into_iter().filter(|c| c.0 == min).map(|c| (c.1, c.2)).sorted());
+            return (min, targets.into_iter().filter(|c| c.0 == min)
+                                            .map(|c| (c.1, c.2)).sorted().collect());
         }
     }
 }
@@ -146,7 +147,7 @@ fn main() {
                     // by HP in addition to coordinate.
                     let (enemy_hp, enemy_pos) = targets.into_iter().map(|(pos, _)| {
                         (&players.iter().find(|p| p.loc.get() == pos).unwrap().hp, pos)
-                    }).sorted().into_iter().next().unwrap();
+                    }).sorted().next().unwrap();
 
                     enemy_hp.set(enemy_hp.get() - if player.elf { elf_attack } else { goblin_attack });
                     if enemy_hp.get() <= 0 {

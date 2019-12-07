@@ -25,7 +25,7 @@ fn main() {
     // Part 1: extract (and remove) graph roots in alphabetical order.
     let mut order = String::new();
     while graph.node_count() > 0 {
-        let root = graph.externals(Incoming).sorted_by_key(|&n| graph[n])[0];
+        let root = graph.externals(Incoming).sorted_by_key(|&n| graph[n]).next().unwrap();
         order.push(graph.remove_node(root).unwrap());
     }
     advtools::print("Work order", order);

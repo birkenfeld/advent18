@@ -11,7 +11,7 @@ macro_rules! make_benches {
                     advtools::bench_mode(
                         concat!("input/", stringify!($mod), ".txt"));
                     let b = Benchmark::new(stringify!($mod), |b| b.iter(main))
-                        .sample_size(5)
+                        .sample_size(10)
                         .warm_up_time(Duration::from_millis(500))
                         .measurement_time(Duration::from_millis(1000));
                     c.bench("aoc", b);

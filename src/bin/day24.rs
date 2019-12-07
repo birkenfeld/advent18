@@ -1,16 +1,15 @@
 use advtools::prelude::{Itertools, Regex, HashSet};
 use advtools::input::{iter_input, to_i32};
-use lazy_static::lazy_static;
+use once_cell::sync::Lazy;
 use strum_macros::EnumString;
 use std::cell::Cell;
 
-lazy_static! {
-    static ref FORMAT: Regex = Regex::new(concat!(
+static FORMAT: Lazy<Regex> = Lazy::new(|| Regex::new(concat!(
         r"(?P<units>\d+) units each with (?P<hp>\d+) hit points",
         r"(?: \((?P<modifiers>.*?)\))? with an attack that does ",
         r"(?P<dmg>\d+) (?P<dmgtype>\w+) damage at initiative (?P<init>\d+)"
-    )).unwrap();
-}
+    )).unwrap()
+);
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
 enum Side {
@@ -87,7 +86,7 @@ fn fight(mut groups: Vec<Group>) -> (Option<Side>, i32) {
                         group.dmg_to(target) > 0)
                 .sorted_by_key(|target| (group.dmg_to(target), target.eff_power(),
                                          target.init));
-            if let Some(&target) = candidates.last() {
+            if let Some(target) = candidates.last() {
                 targets.push((group, target));
                 targeted.insert(target.hp);
             }
