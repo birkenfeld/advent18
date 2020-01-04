@@ -3,7 +3,7 @@ use advtools::input::iter_input_regex;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Square { Sand, Clay, Flow, Still }
-use self::Square::*;
+use Square::*;
 
 enum Flow { Down, Side }
 
@@ -90,6 +90,6 @@ fn main() {
          line.iter().filter(|&&sq| sq == Flow).count())
     }).fold((0, 0), |a, b| (a.0 + b.0, a.1 + b.1));
 
-    advtools::print("Water tiles", still_tiles + flowing_tiles);
-    advtools::print("Non-drying tiles", still_tiles);
+    advtools::verify("Water tiles", still_tiles + flowing_tiles, 39367);
+    advtools::verify("Non-drying tiles", still_tiles, 33061);
 }

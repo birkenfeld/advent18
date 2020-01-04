@@ -19,7 +19,7 @@ enum Square {
     Wall,
     Empty,
 }
-use self::Square::*;
+use Square::*;
 
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 struct Player {
@@ -167,13 +167,15 @@ fn main() {
             }
 
             if elves == starting_elves && starting_elves == players.len() {
-                advtools::print("Outcome where elves win",
-                                players.iter().map(|p| p.hp.get()).sum::<i32>() as u32 * round);
+                advtools::verify("Outcome where elves win",
+                                 players.iter().map(|p| p.hp.get()).sum::<i32>() as u32 * round,
+                                 53725);
                 return;
             } else if elves == 0 || elves == players.len() {
                 if elf_attack == 3 {
-                    advtools::print("Outcome",
-                                    players.iter().map(|p| p.hp.get()).sum::<i32>() as u32 * round);
+                    advtools::verify("Outcome",
+                                     players.iter().map(|p| p.hp.get()).sum::<i32>() as u32 * round,
+                                     227290);
                 }
                 break;
             }

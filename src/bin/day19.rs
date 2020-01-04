@@ -70,7 +70,7 @@ fn main() {
 
     // Part 1: run the VM normally to find the result.
     let regs = VM::new(&prog, ip_index, 0, [0; 6]).run();
-    advtools::print("Starting with reg0 = 0", regs[0]);
+    advtools::verify("Starting with reg0 = 0", regs[0], 968);
 
     // Part 2: the result is the product of all prime factors + 1 of r5 after
     // jumping to instruction 2.  Since the algorithm is quadratic, just rewrite
@@ -83,5 +83,5 @@ fn main() {
         input /= factor;
         output *= factor + 1;
     }
-    advtools::print("Starting with reg0 = 1", output);
+    advtools::verify("Starting with reg0 = 1", output, 10557936);
 }

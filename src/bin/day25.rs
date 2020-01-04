@@ -24,5 +24,5 @@ fn main() {
         }
         constellations.push(new_constellation);
     }
-    advtools::print("Number of constellations", constellations.len());
+    advtools::verify("Number of constellations", constellations.len(), 327);
 }

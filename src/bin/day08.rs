@@ -17,10 +17,10 @@ fn main() {
 
     // Part 1: sum up metadata for all nodes.
     let p1 = reduce(&mut iter1, &|child, meta| child.iter().sum::<usize>() + meta.sum::<usize>());
-    advtools::print("Sum of metadata", p1);
+    advtools::verify("Sum of metadata", p1, 36891);
     // Part 2: get the "value" of the root node.
     let p2 = reduce(&mut iter2, &|child, meta| {
         if child.is_empty() { meta.sum() } else { meta.filter_map(|i| child.get(i - 1)).sum() }
     });
-    advtools::print("Value of root", p2);
+    advtools::verify("Value of root", p2, 20083);
 }

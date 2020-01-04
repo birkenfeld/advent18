@@ -96,10 +96,10 @@ fn main() {
     count_doors(&grid, &mut doors, start, 0);
 
     let max_doors = doors.iter().flat_map(|line| line.iter().max()).max().unwrap();
-    advtools::print("Maximum needed doors", max_doors);
+    advtools::verify("Maximum needed doors", max_doors, 4155);
 
     let many_doors = doors.iter().map(|line| {
         line.iter().filter(|&&d| d >= 1000).count()
     }).sum::<usize>();
-    advtools::print("Rooms >= 1000 doors", many_doors);
+    advtools::verify("Rooms >= 1000 doors", many_doors, 8434);
 }

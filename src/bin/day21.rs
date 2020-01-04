@@ -41,6 +41,6 @@ fn run() -> (u32, u32) {
 
 fn main() {
     let (first, last) = run();
-    advtools::print("r0 for fewest instructions", first);
-    advtools::print("r0 for most instructions", last);
+    advtools::verify("r0 for fewest instructions", first, 986758);
+    advtools::verify("r0 for most instructions", last, 16016565);
 }

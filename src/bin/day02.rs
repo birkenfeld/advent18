@@ -15,7 +15,7 @@ fn main() {
         (dbls + freqs.values().any(|&n| n == 2) as u32,
          tpls + freqs.values().any(|&n| n == 3) as u32)
     });
-    advtools::print("Checksum", doubles * triples);
+    advtools::verify("Checksum", doubles * triples, 6175);
 
     // tuple_combinations() example: [a, b, c] -> (a, b), (a, c), (b, c)
     let new_id = ids.iter().tuple_combinations().map(|(id, id2)| {
@@ -24,5 +24,5 @@ fn main() {
                   .filter_map(|(a, b)| if a == b { Some(a) } else { None })
                   .collect::<String>()
     }).find(|v| v.len() == id_len - 1).unwrap();
-    advtools::print("Common ID", new_id);
+    advtools::verify("Common ID", new_id, "asgwjcmzredihqoutcylvzinx");
 }

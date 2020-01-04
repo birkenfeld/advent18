@@ -12,8 +12,7 @@ enum Equip { Nothing, Lamp, Gear }
 #[derive(Clone, Copy)]
 enum Type { Rocky, Wet, Narrow }
 
-use self::Type::*;
-use self::Equip::*;
+use {Type::*, Equip::*};
 
 impl Type {
     fn new(erosion: u32) -> Self {
@@ -120,8 +119,8 @@ fn main() {
     let total_risk = risk.iter().take(ty+1).flat_map(
         |line| line.iter().take(tx+1).map(|v| *v as u32)
     ).sum::<u32>();
-    advtools::print("Risk level", total_risk);
+    advtools::verify("Risk level", total_risk, 7743);
 
     let path_len = find_path(&risk, (0, 0, Lamp), (ty, tx, Lamp));
-    advtools::print("Path length", path_len);
+    advtools::verify("Path length", path_len, 1029);
 }

@@ -3,7 +3,7 @@ use advtools::input::iter_input;
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 enum State { Open, Wood, Yard }
-use self::State::*;
+use State::*;
 
 fn neighbor_count(grid: &[Vec<State>], (py, px): (usize, usize), st: State) -> usize {
     [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)]
@@ -46,7 +46,7 @@ fn main() {
     for _ in 0..10 {
         grid = evolve(&grid);
     }
-    advtools::print("Value after 10min", evaluate(&grid));
+    advtools::verify("Value after 10min", evaluate(&grid), 582494);
 
     let mut seen = HashMap::new();
     for min in 10.. {
@@ -60,5 +60,5 @@ fn main() {
         seen.insert(grid.clone(), min);
         grid = evolve(&grid);
     }
-    advtools::print("Value after 1bn min", evaluate(&grid));
+    advtools::verify("Value after 1bn min", evaluate(&grid), 174584);
 }

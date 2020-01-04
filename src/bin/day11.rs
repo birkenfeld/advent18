@@ -1,4 +1,4 @@
-use advtools::prelude::{Itertools, itertools::iproduct};
+use advtools::prelude::Itertools;
 use advtools::input::{input_string, to_i32};
 
 const SIZE: usize = 300;
@@ -30,14 +30,15 @@ fn main() {
     // Now calculating a sum of entries in a rectangle is reduced to a
     // simple addition/subtraction of four entries of the table.
     let maxima = (2..=SIZE).flat_map(|sz| {
-        iproduct!(1..=SIZE-sz+1, 1..=SIZE-sz+1).map(|(x, y)| {
+        (1..=SIZE-sz+1).cartesian_product(1..=SIZE-sz+1).map(|(x, y)| {
             (table[y-1][x-1] + table[y+sz-1][x+sz-1]
              - table[y-1][x+sz-1] - table[y+sz-1][x-1],
              x, y, sz)
         }).max()
     }).collect_vec();
 
-    advtools::print("Highest 3x3 power at", format!("{},{}", maxima[1].1, maxima[1].2));
+    advtools::verify("Highest 3x3 power at", format!("{},{}", maxima[1].1, maxima[1].2), "20,77");
+
     let max = maxima.into_iter().max().unwrap();
-    advtools::print("Highest power at", format!("{},{},{}", max.1, max.2, max.3));
+    advtools::verify("Highest power at", format!("{},{},{}", max.1, max.2, max.3), "143,57,10");
 }

@@ -67,10 +67,10 @@ fn main() {
     // Part 1: find the guard with maximum total sleep.
     // Then multiply with the minute it sleeps the most.
     let (guard, _) = asleep.iter().max_by_key(|(_, sleeps)| sleeps.total()).unwrap();
-    advtools::print("Guard*minute 1", guard * asleep[guard].max_minute().0);
+    advtools::verify("Guard*minute 1", guard * asleep[guard].max_minute().0, 125444);
 
     // Part 2: find the guard with the maximum sleep in a single minute.
     let ((min, _), guard) = asleep.iter().map(|(&guard, sleeps)| (sleeps.max_minute(), guard))
                                          .max_by_key(|((_, n), _)| *n).unwrap();
-    advtools::print("Guard*minute 2", guard * min);
+    advtools::verify("Guard*minute 2", guard * min, 18325);
 }

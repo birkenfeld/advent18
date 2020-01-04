@@ -18,9 +18,9 @@ fn main() {
     let input = input_string();
     let polymer = input.trim();
     // Part 1: reduce input as is.
-    advtools::print("Remaining length", reduce(polymer, None));
+    advtools::verify("Remaining length", reduce(polymer, None), 11590);
 
     // Part 2: reduce after removal of a specific pair, find the minimum.
     let min_len = (b'a'..=b'z').map(|c| reduce(polymer, Some(c as char))).min();
-    advtools::print("Remaining length after removal", min_len.unwrap());
+    advtools::verify("Remaining length after removal", min_len.unwrap(), 4504);
 }

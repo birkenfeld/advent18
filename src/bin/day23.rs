@@ -26,7 +26,7 @@ fn main() {
     let in_radius = bots.iter().filter(
         |b| dist(b.pos, strongest.pos) <= strongest.radius
     ).count();
-    advtools::print("In radius", in_radius);
+    advtools::verify("In radius", in_radius, 319);
 
     // Part 2: Find the largest set of bots whose ranges all overlap.
     let largest_set = bots.par_iter().enumerate().map(|(i, b1)| {
@@ -42,5 +42,5 @@ fn main() {
     // Since all bots overlap, the answer is the largest distance to an edge
     // of a range from the origin.
     let d = largest_set.iter().map(|b| dist(b.pos, (0, 0, 0)) - b.radius).max().unwrap();
-    advtools::print("Distance to max overlap", d);
+    advtools::verify("Distance to max overlap", d, 129293598);
 }

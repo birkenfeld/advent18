@@ -1,4 +1,5 @@
-use advtools::prelude::{itertools, Itertools, HashMap, HashSet};
+use advtools::prelude::{Itertools, HashMap, HashSet};
+use advtools::itertools::put_back_n;
 use advtools::input::{iter_input, parse_parts, parse_parts_trim};
 use strum::IntoEnumIterator;
 use strum_macros::{EnumString, EnumIter};
@@ -54,7 +55,7 @@ impl VM {
 }
 
 fn main() {
-    let mut line_iter = itertools::put_back_n(iter_input::<String>());
+    let mut line_iter = put_back_n(iter_input::<String>());
 
     let mut traces: Vec<[Word; 3]> = vec![];
     while let Some((reg1, insn, reg2)) = line_iter.next_tuple() {
@@ -81,7 +82,7 @@ fn main() {
             }
         }).count() >= 3
     }).count();
-    advtools::print("Ambiguous opcodes", ambiguous);
+    advtools::verify("Ambiguous opcodes", ambiguous, 640);
 
     let mut opcode_table = HashMap::<u32, Op>::new();
     while !opcode_candidates.is_empty() {
@@ -97,5 +98,5 @@ fn main() {
     }
 
     let regs = VM::new([0; 4]).run(program, &opcode_table);
-    advtools::print("Register 0", regs[0]);
+    advtools::verify("Register 0", regs[0], 472);
 }

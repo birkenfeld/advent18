@@ -1,4 +1,4 @@
-use advtools::prelude::{Itertools, itertools::iproduct};
+use advtools::prelude::Itertools;
 use advtools::input::iter_input_trim;
 
 const SIZE: i32 = 375;
@@ -13,7 +13,7 @@ fn main() {
     // Part 1: find size of largest finite area nearest to a single point.
     let mut area_sizes = vec![0; points.len()];
 
-    for p in iproduct!(0..SIZE, 0..SIZE) {
+    for p in (0..SIZE).cartesian_product(0..SIZE) {
         // For every grid point, find distances to all points, and their minimum.
         let dists = points.iter().map(|&pc| manhattan_dist(p, pc)).collect_vec();
         let min_dist = dists.iter().min().unwrap();
@@ -31,12 +31,12 @@ fn main() {
     }
 
     let max_area_size = area_sizes.into_iter().max().unwrap();
-    advtools::print("Largest area", max_area_size);
+    advtools::verify("Largest area", max_area_size, 3909);
 
     // Part 2: find size of region with limited distance to all points.
-    let region_size = iproduct!(0..SIZE, 0..SIZE)
+    let region_size = (0..SIZE).cartesian_product(0..SIZE)
         .map(|p| points.iter().map(|&pc| manhattan_dist(p, pc)).sum::<i32>())
         .filter(|&i| i < 10000)
         .count();
-    advtools::print("Limited distance region size", region_size);
+    advtools::verify("Limited distance region size", region_size, 36238);
 }

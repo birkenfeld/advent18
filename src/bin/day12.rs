@@ -24,7 +24,7 @@ fn main() {
     for generation in 0.. {
         // Part 1 completed?
         if generation == 20 {
-            advtools::print("Sum after 20", sum_pots(&state, first_pot));
+            advtools::verify("Sum after 20", sum_pots(&state, first_pot), 3276);
         }
         // Make sure we have enough empty pots at the beginning and the end
         // of the vector.  Inserting at the beginning is not optimal, but
@@ -45,8 +45,9 @@ fn main() {
                                      .enumerate().find(|(_, w)| *w == &*new_state)
         {
             let total_shift = (50_000_000_000 - generation) * idx as i64;
-            return advtools::print("Sum after 50 billion",
-                                   sum_pots(&state, first_pot + total_shift));
+            advtools::verify("Sum after 50 billion",
+                             sum_pots(&state, first_pot + total_shift), 3750000001113_u64);
+            return;
         }
         // The windows() method threw away two entries from the beginning (and
         // the end) of the vector, compensate for that.

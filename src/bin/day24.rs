@@ -116,7 +116,7 @@ fn main() {
     groups.extend(input.map(|s| Group::parse(s, Side::Infection)));
 
     let winning = fight(groups.clone()).1;
-    advtools::print("Units in winning army", winning);
+    advtools::verify("Units in winning army", winning, 16678);
 
     for boost in 1.. {
         let groups = groups.iter().cloned().map(|mut group| {
@@ -124,8 +124,8 @@ fn main() {
             group
         }).collect();
         if let (Some(Side::ImmuneSystem), winning) = fight(groups) {
-            advtools::print("Units in immune system after boost", winning);
-            break;
+            advtools::verify("Units in immune system after boost", winning, 3758);
+            return;
         }
     }
 }

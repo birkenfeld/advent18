@@ -28,7 +28,8 @@ fn main() {
             // Format as a string and output the solutions.
             let msg: String = grid.iter().flat_map(|line| once(&'\n').chain(line)).collect();
             advtools::print("Message", msg);
-            return advtools::print("Seconds to get there", i);
+            advtools::verify("Seconds to get there", i, 10639);
+            return;
         }
     }
 }

@@ -26,12 +26,13 @@ fn main() {
 
         if !ten_scores_done && n >= number + 10 {
             let ten_scores = stack[number..number+10].iter().format("");
-            advtools::print("Ten scores", ten_scores);
+            advtools::verify("Ten scores", ten_scores, 9411137133_u64);
             ten_scores_done = true;
         }
 
         if let Some(i) = stack.windows(ntarget).rev().take(2).position(|p| p == &*digits) {
-            return advtools::print("Positions", n - ntarget - i);
+            advtools::verify("Positions", n - ntarget - i, 20317612);
+            return;
         }
     }
 }

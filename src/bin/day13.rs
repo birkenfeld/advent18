@@ -2,7 +2,7 @@ use advtools::prelude::{Itertools, HashSet};
 use advtools::input::input_string;
 
 enum Dir { U, D, L, R }
-use self::Dir::*;
+use Dir::*;
 
 impl Dir {
     fn left(&self)  -> Self { match self { U => L, L => D, D => R, R => U } }
@@ -56,7 +56,7 @@ fn main() {
             let (track, cur_cart) = &mut map[cart.y][cart.x];
             if *cur_cart != 0 {
                 if !first_collided {
-                    advtools::print("First collision", format!("{},{}", cart.x, cart.y));
+                    advtools::verify("First collision", format!("{},{}", cart.x, cart.y), "76,108");
                     first_collided = true;
                 }
                 prune.insert(cart.id);
@@ -84,7 +84,8 @@ fn main() {
         carts.retain(|c| !prune.contains(&c.id));
         if carts.len() == 1 {
             let cart = carts.into_iter().next().unwrap();
-            return advtools::print("Remaining cart", format!("{},{}", cart.x, cart.y));
+            advtools::verify("Remaining cart", format!("{},{}", cart.x, cart.y), "2,84");
+            return;
         }
 
         // Make sure the carts are always processed in the right
