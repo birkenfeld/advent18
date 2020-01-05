@@ -1,18 +1,17 @@
 use advtools::prelude::{Itertools, HashSet};
 use advtools::input::input_string;
+use advtools::grid::{Grid, Pos};
 
 const N: usize = 100;
-type Grid<T> = [[T; N]; N];
-type Pos = (usize, usize);
 
 #[derive(Clone, Copy)]
 struct Doors { down: bool, right: bool }
 
 // Recursively follow a path from given position and assign doors where necessary.
 fn follow<'p>(grid: &mut Grid<Doors>, seen: &mut HashSet<(Pos, &'p str)>,
-              (mut y, mut x): Pos, path: &'p str) -> Vec<Pos> {
+              mut pos: Pos, path: &'p str) -> Vec<Pos> {
     // If we've started at the same position with the same path, nothing to do.
-    if !seen.insert(((y, x), path)) {
+    if !seen.insert((pos, path)) {
         return vec![];
     }
     let mut char_iter = path.chars();
@@ -21,10 +20,10 @@ fn follow<'p>(grid: &mut Grid<Doors>, seen: &mut HashSet<(Pos, &'p str)>,
             // End of the full path, there's nowhere left to go.
             '$' => return vec![],
             // We have a direction where there must be a door.
-            'N' => { y -= 1; grid[y][x].down = true }
-            'S' => { grid[y][x].down = true; y += 1 }
-            'W' => { x -= 1; grid[y][x].right = true }
-            'E' => { grid[y][x].right = true; x += 1 }
+            'N' => { pos.step_up(); grid[pos].down = true }
+            'S' => { grid[pos].down = true; pos.step_down() }
+            'W' => { pos.step_left(); grid[pos].right = true }
+            'E' => { grid[pos].right = true; pos.step_right() }
             // Hit a branch.
             '(' => {
                 // Determine all of the branching sub-paths.  Need to keep track of the
@@ -50,8 +49,8 @@ fn follow<'p>(grid: &mut Grid<Doors>, seen: &mut HashSet<(Pos, &'p str)>,
                 // For every sub-path, follow it, and for each of the resulting positions,
                 // follow the rest of our path after the branch.  Then we are done, so return.
                 return splits.into_iter().flat_map(|(i, j)| {
-                    follow(grid, seen, (y, x), &rest[i..j]).into_iter().flat_map(|(y1, x1)| {
-                        follow(grid, seen, (y1, x1), &rest[closing+1..])
+                    follow(grid, seen, pos, &rest[i..j]).into_iter().flat_map(|pos1| {
+                        follow(grid, seen, pos1, &rest[closing+1..])
                     }).collect_vec()
                 }).collect();
             }
@@ -60,39 +59,39 @@ fn follow<'p>(grid: &mut Grid<Doors>, seen: &mut HashSet<(Pos, &'p str)>,
         }
     }
     // Our (sub-)path has ended, but we didn't hit the end, so return final position.
-    vec![(y, x)]
+    vec![pos]
 }
 
 // Recursively find the shortest door count to reach each room.
-fn count_doors(grid: &Grid<Doors>, doors: &mut Grid<u16>, (y, x): Pos, n: u16) {
-    if n < doors[y][x] {
-        doors[y][x] = n;
-        if grid[y][x].down {
-            count_doors(grid, doors, (y+1, x), n+1);
+fn count_doors(grid: &Grid<Doors>, doors: &mut Grid<u16>, pos: Pos, n: u16) {
+    if n < doors[pos] {
+        doors[pos] = n;
+        if grid[pos].down {
+            count_doors(grid, doors, pos.down(), n+1);
         }
-        if grid[y][x].right {
-            count_doors(grid, doors, (y, x+1), n+1);
+        if grid[pos].right {
+            count_doors(grid, doors, pos.right(), n+1);
         }
-        if y > 0 && grid[y-1][x].down {
-            count_doors(grid, doors, (y-1, x), n+1);
+        if pos.y > 0 && grid[pos.up()].down {
+            count_doors(grid, doors, pos.up(), n+1);
         }
-        if x > 0 && grid[y][x-1].right {
-            count_doors(grid, doors, (y, x-1), n+1);
+        if pos.x > 0 && grid[pos.left()].right {
+            count_doors(grid, doors, pos.left(), n+1);
         }
     }
 }
 
 fn main() {
     let full_path = input_string();
-    let start = (N/2 + 1, N/2);
+    let start = Pos(N as i32/2, N as i32/2 + 1);
     // Grid that records for each room whether there is a door to the south
     // and the east direction.  (The other doors are covered by the adjacent
     // rooms to the north and west.)
-    let mut grid = [[Doors { down: false, right: false }; N]; N];
+    let mut grid = Grid::new(vec![vec![Doors { down: false, right: false }; N]; N]);
 
     follow(&mut grid, &mut HashSet::new(), start, &full_path.trim()[1..]);
 
-    let mut doors = [[u16::max_value(); N]; N];
+    let mut doors = Grid::new(vec![vec![u16::max_value(); N]; N]);
     count_doors(&grid, &mut doors, start, 0);
 
     let max_doors = doors.iter().flat_map(|line| line.iter().max()).max().unwrap();

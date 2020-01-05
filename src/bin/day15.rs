@@ -1,16 +1,7 @@
 use advtools::prelude::{HashSet, Itertools};
 use advtools::input::input_string;
+use advtools::grid::{Grid, Pos};
 use std::cell::Cell;
-
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
-struct Pos(i32, i32);
-
-impl std::ops::Add for Pos {
-    type Output = Pos;
-    fn add(self, other: Pos) -> Pos {
-        Pos(self.0 + other.0, self.1 + other.1)
-    }
-}
 
 #[derive(PartialEq, Clone, Copy)]
 enum Square {
@@ -30,32 +21,20 @@ struct Player {
 
 impl Player {
     fn new(elf: bool, y: usize, x: usize) -> Self {
-        Self { elf, loc: Cell::new(Pos(y as i32, x as i32)), hp: Cell::new(200) }
+        Self { elf, loc: Cell::new(Pos(x as i32, y as i32)), hp: Cell::new(200) }
     }
     fn hates(&self, v: Square) -> bool {
         (self.elf && v == Goblin) || (!self.elf && v == Elf)
     }
 }
 
-#[derive(Clone)]
-struct Map<T>(Vec<Vec<T>>);
 
-impl<T: Copy> Map<T> {
-    fn set(&mut self, Pos(y, x): Pos, t: T) {
-        self.0[y as usize][x as usize] = t;
-    }
-    fn get(&self, Pos(y, x): Pos) -> T {
-        self.0[y as usize][x as usize]
-    }
-}
-
-
-const DIRECTIONS: [Pos; 4] = [Pos(-1, 0), Pos(0, -1), Pos(0, 1), Pos(1, 0)];
+const DIRECTIONS: [Pos; 4] = [Pos(0, -1), Pos(-1, 0), Pos(1, 0), Pos(0, 1)];
 
 // Find targets for a player using BFS.  We return a list of candidates, sorted
 // by reading order, and also the direction for the first step if that target is
 // selected.
-fn find_targets(player: &Player, map: &Map<Square>) -> (i32, Vec<(Pos, Pos)>) {
+fn find_targets(player: &Player, map: &Grid<Square>) -> (i32, Vec<(Pos, Pos)>) {
     let mut positions = vec![(1, None, player.loc.get())];
     let mut seen = HashSet::with_capacity(1000);
     seen.insert(player.loc.get());
@@ -68,9 +47,9 @@ fn find_targets(player: &Player, map: &Map<Square>) -> (i32, Vec<(Pos, Pos)>) {
         for (steps, first, pos) in positions {
             for &delta in &DIRECTIONS {
                 let new_pos = pos + delta;
-                let first = first.or_else(|| Some(delta));
+                let first = first.or(Some(delta));
                 if seen.insert(new_pos) {
-                    match map.get(new_pos) {
+                    match map[new_pos] {
                         Empty => if steps < min {
                             new_positions.push((steps + 1, first, new_pos))
                         }
@@ -96,15 +75,15 @@ fn main() {
 
     let mut starting_elves = 0;
     let mut new_players = vec![];
-    let new_map = Map(input_string().lines().enumerate().map(|(y, line)| {
+    let new_map = Grid::new(input_string().lines().enumerate().map(|(y, line)| {
         line.trim().chars().enumerate().map(|(x, c)| match c {
             '#' => Wall,
             '.' => Empty,
             'G' => { new_players.push(Player::new(false, y, x)); Goblin }
             'E' => { new_players.push(Player::new(true,  y, x)); starting_elves += 1; Elf }
             _ => unreachable!()
-        }).collect_vec()
-    }).collect_vec());
+        }).collect()
+    }));
 
     for elf_attack in 3.. {
         let mut map = new_map.clone();
@@ -130,8 +109,8 @@ fn main() {
                     let pos = player.loc.get();
                     let step = targets[0].1;
                     player.loc.set(pos + step);
-                    map.set(pos, Empty);
-                    map.set(pos + step, if player.elf { Elf } else { Goblin });
+                    map[pos] = Empty;
+                    map[pos + step] = if player.elf { Elf } else { Goblin };
 
                     // If we were one tile away, we might be able to attack
                     // now. Recheck targets.
@@ -151,7 +130,7 @@ fn main() {
 
                     enemy_hp.set(enemy_hp.get() - if player.elf { elf_attack } else { goblin_attack });
                     if enemy_hp.get() <= 0 {
-                        map.set(enemy_pos, Empty);
+                        map[enemy_pos] = Empty;
                     }
                 }
             }

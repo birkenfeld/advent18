@@ -1,20 +1,12 @@
-use advtools::prelude::{Itertools, HashSet};
+use advtools::prelude::HashSet;
 use advtools::input::input_string;
+use advtools::grid::{Grid, Dir, Pos};
 
-enum Dir { U, D, L, R }
 use Dir::*;
-
-impl Dir {
-    fn left(&self)  -> Self { match self { U => L, L => D, D => R, R => U } }
-    fn right(&self) -> Self { match self { U => R, R => D, D => L, L => U } }
-    fn ul_dr(&self) -> Self { match self { U => L, R => D, D => R, L => U } }
-    fn ur_dl(&self) -> Self { match self { U => R, R => U, D => L, L => D } }
-}
 
 struct Cart {
     id: usize,
-    x: usize,
-    y: usize,
+    pos: Pos<usize>,
     dir: Dir,
     turn: u8,
 }
@@ -22,18 +14,19 @@ struct Cart {
 fn main() {
     // Collect list of carts, and a map of tracks and current occupation.
     let mut carts = vec![];
-    let mut map = input_string().lines().enumerate().map(|(y, line)| {
+    let mut map = Grid::new(input_string().lines().enumerate().map(|(y, line)| {
         line.chars().enumerate().map(|(x, c)| {
             let id = carts.len() + 1;
+            let pos = Pos(x, y);
             match c {
-                '^' => { carts.push(Cart { id, x, y, dir: U, turn: 0 }); ('|', id) }
-                'v' => { carts.push(Cart { id, x, y, dir: D, turn: 0 }); ('|', id) }
-                '<' => { carts.push(Cart { id, x, y, dir: L, turn: 0 }); ('-', id) }
-                '>' => { carts.push(Cart { id, x, y, dir: R, turn: 0 }); ('-', id) }
+                '^' => { carts.push(Cart { id, pos, dir: U, turn: 0 }); ('|', id) }
+                'v' => { carts.push(Cart { id, pos, dir: D, turn: 0 }); ('|', id) }
+                '<' => { carts.push(Cart { id, pos, dir: L, turn: 0 }); ('-', id) }
+                '>' => { carts.push(Cart { id, pos, dir: R, turn: 0 }); ('-', id) }
                 ch  => { (ch, 0) }
             }
-        }).collect_vec()
-    }).collect_vec();
+        }).collect()
+    }));
 
     let mut first_collided = false;
     loop {
@@ -44,19 +37,14 @@ fn main() {
             if prune.contains(&cart.id) { continue; }
 
             // Remove cart from occupation map, and move it along one square.
-            map[cart.y][cart.x].1 = 0;
-            match cart.dir {
-                U => cart.y -= 1,
-                D => cart.y += 1,
-                L => cart.x -= 1,
-                R => cart.x += 1
-            }
+            map[cart.pos].1 = 0;
+            cart.pos.step(cart.dir);
             // If we have a cart already on the new square, a collision has
             // occurred, and we need to remove both carts.
-            let (track, cur_cart) = &mut map[cart.y][cart.x];
+            let (track, cur_cart) = &mut map[cart.pos];
             if *cur_cart != 0 {
                 if !first_collided {
-                    advtools::verify("First collision", format!("{},{}", cart.x, cart.y), "76,108");
+                    advtools::verify("First collision", cart.pos, "76,108");
                     first_collided = true;
                 }
                 prune.insert(cart.id);
@@ -84,12 +72,12 @@ fn main() {
         carts.retain(|c| !prune.contains(&c.id));
         if carts.len() == 1 {
             let cart = carts.into_iter().next().unwrap();
-            advtools::verify("Remaining cart", format!("{},{}", cart.x, cart.y), "2,84");
+            advtools::verify("Remaining cart", cart.pos, "2,84");
             return;
         }
 
         // Make sure the carts are always processed in the right
         // order (top -> down, left -> right).
-        carts.sort_by_key(|c| (c.y, c.x));
+        carts.sort_by_key(|c| (c.pos.y, c.pos.x));
     }
 }
