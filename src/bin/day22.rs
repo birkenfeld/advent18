@@ -1,5 +1,5 @@
 use advtools::prelude::{Itertools, HashSet, HashMap};
-use advtools::input::{iter_input, to_u32, to_usize};
+use advtools::input::{iter_lines, to_u32, to_usize};
 use priority_queue::PriorityQueue;
 
 const MODULO: u32 = 20183;
@@ -92,7 +92,7 @@ fn find_path(risk: &[Vec<Type>], start: Node, target: Node) -> u32 {
 }
 
 fn main() {
-    let mut input = iter_input::<String>();
+    let mut input = iter_lines();
     let depth = to_u32(input.next().unwrap().split_whitespace().nth(1).unwrap());
     let (tx, ty) = input.next().unwrap().split_whitespace().nth(1).unwrap()
         .split(",").map(to_usize).collect_tuple().unwrap();

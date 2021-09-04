@@ -1,5 +1,5 @@
 use advtools::prelude::{Itertools, Regex, HashSet};
-use advtools::input::{iter_input, to_i32};
+use advtools::input::{iter_lines, to_i32};
 use once_cell::sync::Lazy;
 use strum_macros::EnumString;
 use std::cell::Cell;
@@ -108,7 +108,7 @@ fn fight(mut groups: Vec<Group>) -> (Option<Side>, i32) {
 }
 
 fn main() {
-    let mut input = iter_input::<String>();
+    let mut input = iter_lines();
     let mut groups = input.by_ref().skip(1)
                                    .take_while(|line| line != "Infection:")
                                    .map(|s| Group::parse(s, Side::ImmuneSystem))

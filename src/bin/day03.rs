@@ -4,7 +4,7 @@ use advtools::input::iter_input_regex;
 fn main() {
     // Parse the input into a hash map of claimed squares mapping to the
     // IDs of the claims.
-    let mut claimed = HashMap::<(u32, u32), ArrayVec<[u16; 8]>>::new();
+    let mut claimed = HashMap::<(u32, u32), ArrayVec<u16, 8>>::new();
     let mut all_ids = HashSet::new();
     for (id, x, y, w, h) in iter_input_regex(r"#(\d+) @ (\d+),(\d+): (\d+)x(\d+)") {
         let (w, h): (u32, u32) = (w, h);

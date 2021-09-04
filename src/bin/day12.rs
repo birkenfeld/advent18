@@ -6,7 +6,7 @@ fn sum_pots(state: &[bool], first: i64) -> i64 {
 }
 
 fn main() {
-    let mut iter = iter_input_parts::<(String, String), _>([0, 2]);
+    let mut iter = iter_input_parts::<(String, String), _, 2>([0, 2]);
 
     let initial_str = iter.next().unwrap().1;
     // Parse initial state into a vec of bools.  Since we don't have to simulate

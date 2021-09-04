@@ -1,6 +1,6 @@
 use advtools::prelude::{Itertools, HashMap, HashSet};
 use advtools::itertools::put_back_n;
-use advtools::input::{iter_input, parse_parts, parse_parts_trim};
+use advtools::input::{iter_lines, parse_parts, parse_parts_trim};
 use strum::IntoEnumIterator;
 use strum_macros::{EnumString, EnumIter};
 
@@ -55,7 +55,7 @@ impl VM {
 }
 
 fn main() {
-    let mut line_iter = put_back_n(iter_input::<String>());
+    let mut line_iter = put_back_n(iter_lines());
 
     let mut traces: Vec<[Word; 3]> = vec![];
     while let Some((reg1, insn, reg2)) = line_iter.next_tuple() {

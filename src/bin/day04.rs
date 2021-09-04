@@ -9,7 +9,7 @@ struct Event {
 
 struct Day {
     guard: u32,
-    events: ArrayVec<[Event; 8]>,
+    events: ArrayVec<Event, 8>,
 }
 
 impl Default for Day {

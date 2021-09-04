@@ -23,7 +23,7 @@ fn main() {
             // Arrange stars into a grid.
             let mut grid = vec![vec![' '; (x2 - x1 + 1) as usize]; TARGET_HEIGHT as usize];
             for (p, _) in &points {
-                grid[(p.1 - y1) as usize][(p.0 - x1) as usize] = '#';
+                grid[(p.1 - y1) as usize][(p.0 - x1) as usize] = '█';
             }
             // Format as a string and output the solutions.
             let msg: String = grid.iter().flat_map(|line| once(&'\n').chain(line)).collect();

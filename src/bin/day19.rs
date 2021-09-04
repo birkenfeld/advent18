@@ -1,4 +1,4 @@
-use advtools::input::{iter_input, parse_parts, to_usize};
+use advtools::input::{iter_lines, parse_parts, to_usize};
 use strum_macros::EnumString;
 
 #[derive(EnumString)]
@@ -61,7 +61,7 @@ impl VM<'_> {
 }
 
 fn main() {
-    let mut input_iter = iter_input::<String>();
+    let mut input_iter = iter_lines();
     let ip_index = to_usize(input_iter.next().unwrap().split_whitespace().nth(1).unwrap());
     let prog = input_iter.map(|line| {
         let (opstr, data): (String, _) = parse_parts(&line, [0, 1, 2, 3]);
