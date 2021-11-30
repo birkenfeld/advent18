@@ -3,14 +3,14 @@ name = "advent18"
 description = "Solutions for Advent of Code 2018."
 version = "0.1.0"
 authors = ["Georg Brandl <georg@python.org>"]
-edition = "2018"
+edition = "2021"
 
 [[bench]]
 name = "days"
 harness = false
 
 [dependencies]
-advtools = { version = "0.6.0", path = "../advtools" }
+advtools = { version = "0.7.0", path = "../advtools" }
 petgraph = "0.6.0"
 strum = "0.21.0"
 strum_macros = "0.21.1"

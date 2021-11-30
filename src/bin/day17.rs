@@ -32,7 +32,7 @@ fn fill(grid: &mut [[Square; 600]], py: usize, px: usize, flow: Flow) {
             grid[py][px] = Flow;
             let mut enclosed = [0, 0];
             // Flow to left then right
-            for &dir in &[0, 1] {
+            for dir in [0, 1] {
                 for dx in 1.. {
                     let new_x = if dir == 0 { px - dx } else { px + dx };
                     match grid[py][new_x] {
