@@ -1,4 +1,4 @@
-use advtools::input::iter_input_regex;
+use advtools::input;
 use advtools::rayon::prelude::*;
 
 const FORMAT: &str = r"pos=< *(-?\d+),(-?\d+),(-?\d+)>, r=(\d+)";
@@ -17,7 +17,7 @@ impl Bot {
 }
 
 fn main() {
-    let bots: Vec<Bot> = iter_input_regex(FORMAT).map(
+    let bots: Vec<Bot> = input::rx_lines(FORMAT).map(
         |(pos, radius)| Bot { pos, radius }
     ).collect();
 

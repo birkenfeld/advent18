@@ -1,5 +1,5 @@
 use advtools::prelude::{HashSet, Itertools};
-use advtools::input::input_string;
+use advtools::input;
 use advtools::grid::{Grid, Pos};
 use std::cell::Cell;
 
@@ -75,7 +75,7 @@ fn main() {
 
     let mut starting_elves = 0;
     let mut new_players = vec![];
-    let new_map = Grid::new(input_string().lines().enumerate().map(|(y, line)| {
+    let new_map = Grid::new(input::lines().enumerate().map(|(y, line)| {
         line.trim().chars().enumerate().map(|(x, c)| match c {
             '#' => Wall,
             '.' => Empty,
@@ -100,7 +100,7 @@ fn main() {
                     break;
                 }
 
-                let (mut dist, mut targets) = find_targets(&player, &map);
+                let (mut dist, mut targets) = find_targets(player, &map);
                 if targets.is_empty() {
                     continue;
                 }
@@ -115,7 +115,7 @@ fn main() {
                     // If we were one tile away, we might be able to attack
                     // now. Recheck targets.
                     if dist == 2 {
-                        let (new_dist, new_tgts) = find_targets(&player, &map);
+                        let (new_dist, new_tgts) = find_targets(player, &map);
                         dist = new_dist;
                         targets = new_tgts;
                     }

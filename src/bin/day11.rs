@@ -1,5 +1,5 @@
 use advtools::prelude::Itertools;
-use advtools::input::{input_string, to_i32};
+use advtools::input;
 
 const SIZE: usize = 300;
 
@@ -10,7 +10,7 @@ fn power(x: usize, y: usize, serial: i32) -> i32 {
 }
 
 fn main() {
-    let serial = to_i32(input_string().trim());
+    let serial = input::parse();
 
     // Create a table with 2-D cumulative sums of powers, i.e.
     // [a b]     [a   a+b    ]

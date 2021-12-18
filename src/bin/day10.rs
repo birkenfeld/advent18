@@ -1,12 +1,12 @@
 use advtools::prelude::Itertools;
-use advtools::input::iter_input_regex;
+use advtools::input;
 use std::iter::once;
 
 const FORMAT: &str = r"position=< *(-?\d+), *(-?\d+)> velocity=< *(-?\d+), *(-?\d+)>";
 const TARGET_HEIGHT: i32 = 10;
 
 fn main() {
-    let mut points: Vec<((i32, i32), (i32, i32))> = iter_input_regex(FORMAT).collect();
+    let mut points: Vec<((i32, i32), (i32, i32))> = input::rx_lines(FORMAT).collect();
     for i in 1.. {
         // Process movement of stars.
         for (p, v) in &mut points {
@@ -17,7 +17,7 @@ fn main() {
         // The goal is for the spread in Y coordinates (line height) to be
         // minimal.  At most TARGET_HEIGHT should be reached.
         let (y1, y2) = points.iter().map(|(p, _)| p.1).minmax().into_option().unwrap();
-        if y2 - y1 + 1 <= TARGET_HEIGHT {
+        if y2 - y1 < TARGET_HEIGHT {
             // Determine how many grid points we need in X direction as well.
             let (x1, x2) = points.iter().map(|(p, _)| p.0).minmax().into_option().unwrap();
             // Arrange stars into a grid.

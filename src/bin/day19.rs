@@ -1,4 +1,4 @@
-use advtools::input::{iter_lines, parse_parts, to_usize};
+use advtools::input;
 use strum_macros::EnumString;
 
 #[derive(EnumString)]
@@ -21,7 +21,7 @@ struct VM<'i> {
 }
 
 impl VM<'_> {
-    fn new(prog: &Vec<Insn>, ip: usize, break_at: u32, regs: [u32; 6]) -> VM {
+    fn new(prog: &[Insn], ip: usize, break_at: u32, regs: [u32; 6]) -> VM {
         VM { prog, ip, break_at, regs }
     }
 
@@ -61,12 +61,10 @@ impl VM<'_> {
 }
 
 fn main() {
-    let mut input_iter = iter_lines();
-    let ip_index = to_usize(input_iter.next().unwrap().split_whitespace().nth(1).unwrap());
-    let prog = input_iter.map(|line| {
-        let (opstr, data): (String, _) = parse_parts(&line, [0, 1, 2, 3]);
+    let ip_index = input::rx_parse(r"#ip (\d).*");
+    let prog = input::parse_lines::<Option<(&str, [u32; 3])>>().flatten().map(|(opstr, data)| {
         Insn { op: opstr.parse().unwrap(), data }
-    }).collect();
+    }).collect::<Vec<_>>();
 
     // Part 1: run the VM normally to find the result.
     let regs = VM::new(&prog, ip_index, 0, [0; 6]).run();

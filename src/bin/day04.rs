@@ -1,5 +1,7 @@
 use advtools::prelude::{Itertools, HashMap, ArrayVec};
-use advtools::input::{iter_input_regex, to_u32};
+use advtools::input;
+
+const FORMAT: &str = r"\[1518-(\d+)-(\d+) (\d+):(\d+)\] (?:Guard #)?(falls|wakes|\d+)";
 
 #[derive(Default, PartialEq, Eq, PartialOrd, Ord)]
 struct Event {
@@ -35,15 +37,15 @@ fn main() {
     let mut asleep = HashMap::new();
     // First, collect the events for each day (needs a separate pass since
     // they are unsorted in the input).
-    for line in iter_input_regex(r"\[1518-(\d+)-(\d+) (\d+):(\d+)\] (?:Guard #)?(falls|wakes|\d+)") {
-        let (m, d, hh, mm, action): (u16, u16, i16, i16, String) = line;
+    for line in input::rx_lines(FORMAT) {
+        let (m, d, hh, mm, action): (u16, u16, i16, i16, &str) = line;
         // Correct the day and minute for dates before midnight.
         let (day, min) = if hh == 23 { (100*m + d + 1, mm - 60) } else { (100*m + d, mm) };
         let entry = days.entry(day).or_default();
-        match &*action {
+        match action {
             "falls" => entry.events.push(Event { minute: min as u32, sleep: true }),
             "wakes" => entry.events.push(Event { minute: min as u32, sleep: false }),
-            num     => entry.guard = to_u32(num),
+            num     => entry.guard = input::to_u32(num),
         }
     }
     // Now, collect the "asleep minutes" for each guard over all days.

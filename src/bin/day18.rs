@@ -1,5 +1,5 @@
 use advtools::prelude::{Itertools, HashMap};
-use advtools::input::iter_lines;
+use advtools::input;
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 enum State { Open, Wood, Yard }
@@ -34,7 +34,7 @@ fn evaluate(grid: &[Vec<State>]) -> usize {
 }
 
 fn main() {
-    let mut grid = iter_lines().map(|line| {
+    let mut grid = input::lines().map(|line| {
         line.chars().map(|ch| match ch {
             '.' => State::Open,
             '|' => State::Wood,

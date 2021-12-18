@@ -1,5 +1,5 @@
 use advtools::prelude::Itertools;
-use advtools::input::iter_input_regex;
+use advtools::input;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Square { Sand, Clay, Flow, Still }
@@ -67,7 +67,7 @@ fn fill(grid: &mut [[Square; 600]], py: usize, px: usize, flow: Flow) {
 
 fn main() {
     let mut grid = vec![[Sand; 600]; 2000];
-    for line in iter_input_regex(r"(x|y)=(\d+), .=(\d+)\.\.(\d+)") {
+    for line in input::rx_lines(r"(x|y)=(\d+), .=(\d+)\.\.(\d+)") {
         let (coord, j, i1, i2): (char, usize, usize, usize) = line;
         for i in i1..=i2 {
             if coord == 'x' {

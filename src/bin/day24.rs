@@ -1,5 +1,5 @@
 use advtools::prelude::{Itertools, Regex, HashSet};
-use advtools::input::{iter_lines, to_i32};
+use advtools::input;
 use once_cell::sync::Lazy;
 use strum_macros::EnumString;
 use std::cell::Cell;
@@ -40,8 +40,8 @@ struct Group {
 }
 
 impl Group {
-    fn parse(line: String, side: Side) -> Group {
-        let caps = FORMAT.captures(&line).unwrap();
+    fn parse(line: &str, side: Side) -> Group {
+        let caps = FORMAT.captures(line).unwrap();
         let mods = caps.name("modifiers").map_or("", |s| s.as_str());
         let mut weak = HashSet::new();
         let mut immune = HashSet::new();
@@ -54,10 +54,10 @@ impl Group {
         }
         Group {
             side, weak, immune,
-            hp: to_i32(&caps["hp"]),
-            dmg: to_i32(&caps["dmg"]),
-            init: to_i32(&caps["init"]),
-            units: Cell::new(to_i32(&caps["units"])),
+            hp: input::to_i32(&caps["hp"]),
+            dmg: input::to_i32(&caps["dmg"]),
+            init: input::to_i32(&caps["init"]),
+            units: Cell::new(input::to_i32(&caps["units"])),
             dmgtype: caps["dmgtype"].parse().unwrap(),
         }
     }
@@ -108,9 +108,9 @@ fn fight(mut groups: Vec<Group>) -> (Option<Side>, i32) {
 }
 
 fn main() {
-    let mut input = iter_lines();
+    let mut input = input::lines();
     let mut groups = input.by_ref().skip(1)
-                                   .take_while(|line| line != "Infection:")
+                                   .take_while(|&line| line != "Infection:")
                                    .map(|s| Group::parse(s, Side::ImmuneSystem))
                                    .collect_vec();
     groups.extend(input.map(|s| Group::parse(s, Side::Infection)));

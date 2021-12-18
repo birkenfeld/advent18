@@ -1,8 +1,9 @@
 use advtools::prelude::{Itertools, HashMap, HashSet};
-use advtools::itertools::put_back_n;
-use advtools::input::{iter_lines, parse_parts, parse_parts_trim};
+use advtools::input;
 use strum::IntoEnumIterator;
 use strum_macros::{EnumString, EnumIter};
+
+const FORMAT: &str = r"(\D*)(\d+)\D+(\d+)\D+(\d+)\D+(\d+).*";
 
 type Word = [u32; 4];
 
@@ -55,21 +56,20 @@ impl VM {
 }
 
 fn main() {
-    let mut line_iter = put_back_n(iter_lines());
+    let mut line_iter = input::rx_lines::<(&str, Word)>(FORMAT);
 
     let mut traces: Vec<[Word; 3]> = vec![];
+    let mut program: Vec<Word> = vec![];
     while let Some((reg1, insn, reg2)) = line_iter.next_tuple() {
-        if !reg1.starts_with("Before:") {
-            line_iter.put_back(reg2);
-            line_iter.put_back(insn);
-            line_iter.put_back(reg1);
+        if reg1.0.is_empty() {
+            program.push(reg1.1);
+            program.push(insn.1);
+            program.push(reg2.1);
             break;
         }
-        traces.push([parse_parts_trim(&reg1, [1, 2, 3, 4], "[,]"),
-                     parse_parts(&insn, [0, 1, 2, 3]),
-                     parse_parts_trim(&reg2, [1, 2, 3, 4], "[,]")]);
+        traces.push([reg1.1, insn.1, reg2.1]);
     }
-    let program: Vec<Word> = line_iter.map(|line| parse_parts(&line, [0, 1, 2, 3])).collect_vec();
+    program.extend(line_iter.map(|line| line.1));
 
     let mut opcode_candidates = HashMap::<_, HashSet<_>>::new();
     let ambiguous = traces.into_iter().filter(|trace| {

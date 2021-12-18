@@ -1,10 +1,9 @@
 use advtools::prelude::Itertools;
-use advtools::input::{input_string, to_usize};
+use advtools::input;
 
 fn main() {
-    let number_str = input_string().trim().to_string();
-    let number = to_usize(&number_str);
-    let digits = number_str.chars().map(|d| d.to_digit(10).unwrap() as u8).collect_vec();
+    let number = input::parse();
+    let digits = input::chars().map(|d| d.to_digit(10).unwrap() as u8).collect_vec();
     let ntarget = digits.len();
 
     let mut stack = vec![3u8, 7];
@@ -30,7 +29,7 @@ fn main() {
             ten_scores_done = true;
         }
 
-        if let Some(i) = stack.windows(ntarget).rev().take(2).position(|p| p == &*digits) {
+        if let Some(i) = stack.windows(ntarget).rev().take(2).position(|p| p == digits) {
             advtools::verify("Positions", n - ntarget - i, 20317612);
             return;
         }

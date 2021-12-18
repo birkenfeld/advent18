@@ -1,4 +1,4 @@
-use advtools::input::input_string;
+use advtools::input;
 
 fn reacts(a: char, b: char) -> bool {
     a != b && a.eq_ignore_ascii_case(&b)
@@ -15,8 +15,7 @@ fn reduce(polymer: &str, skip: Option<char>) -> usize {
 }
 
 fn main() {
-    let input = input_string();
-    let polymer = input.trim();
+    let polymer = input::string();
     // Part 1: reduce input as is.
     advtools::verify("Remaining length", reduce(polymer, None), 11590);
 

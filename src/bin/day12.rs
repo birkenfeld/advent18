@@ -1,14 +1,14 @@
 use advtools::prelude::{HashSet, Itertools};
-use advtools::input::iter_input_parts;
+use advtools::input;
 
 fn sum_pots(state: &[bool], first: i64) -> i64 {
     (first..).zip(state).map(|(i, &b)| i * b as i64).sum()
 }
 
 fn main() {
-    let mut iter = iter_input_parts::<(String, String), _, 2>([0, 2]);
+    let mut iter = input::parse_lines::<Vec<&str>>();
 
-    let initial_str = iter.next().unwrap().1;
+    let initial_str = iter.next().unwrap()[2];
     // Parse initial state into a vec of bools.  Since we don't have to simulate
     // many iterations, this is ok, otherwise a vector of bits, packed into a
     // u128, would be much more efficient.
@@ -17,8 +17,8 @@ fn main() {
     let mut first_pot = 0;
 
     // Parse rules for new plants into a set of [bool].
-    let rules: HashSet<Box<[_]>> = iter.filter(|x| x.1 == "#").map(|(rule, _)| {
-        rule.chars().map(|c| c == '#').collect()
+    let rules: HashSet<Box<[_]>> = iter.filter(|x| x[2] == "#").map(|x| {
+        x[0].chars().map(|c| c == '#').collect()
     }).collect();
 
     for generation in 0.. {
@@ -42,7 +42,7 @@ fn main() {
         // amount, we have reached a steady state and can exit the simulation.
         // The effect of the remaining steps on the pot sum is just N * shift.
         if let Some((idx, _)) = state.windows(new_state.len())
-                                     .enumerate().find(|(_, w)| *w == &*new_state)
+                                     .enumerate().find(|(_, w)| *w == new_state)
         {
             let total_shift = (50_000_000_000 - generation) * idx as i64;
             advtools::verify("Sum after 50 billion",

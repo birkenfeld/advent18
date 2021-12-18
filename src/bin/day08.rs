@@ -1,5 +1,5 @@
 use advtools::prelude::Itertools;
-use advtools::input::{input_string, to_usize};
+use advtools::input;
 
 fn reduce<I, F>(it: &mut I, combine: &F) -> usize
 where I: Iterator<Item=usize>, F: Fn(&[usize], std::iter::Take<&mut I>) -> usize
@@ -10,9 +10,9 @@ where I: Iterator<Item=usize>, F: Fn(&[usize], std::iter::Take<&mut I>) -> usize
 }
 
 fn main() {
-    let input = input_string();
+    let input = input::string();
     // Since we need to iterate twice over the same data, clone the iterator.
-    let mut iter1 = input.split_whitespace().map(to_usize);
+    let mut iter1 = input.split_whitespace().map(input::to_usize);
     let mut iter2 = iter1.clone();
 
     // Part 1: sum up metadata for all nodes.

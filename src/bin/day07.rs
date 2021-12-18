@@ -1,6 +1,8 @@
 use advtools::prelude::{HashMap, Itertools};
-use advtools::input::iter_input_parts;
+use advtools::input;
 use petgraph::prelude::*;
+
+const FORMAT: &str = r"Step (.) .* step (.)";
 
 struct Task {
     id: char,
@@ -12,7 +14,7 @@ fn main() {
     // Create a directed graph where node weights are the assigned letter.
     let mut graph = StableGraph::new();
     let mut nodes = HashMap::new();
-    for (a, b) in iter_input_parts::<(char, char), _, 2>([1, 7]) {
+    for (a, b) in input::rx_lines::<(char, char)>(FORMAT) {
         let na = *nodes.entry(a).or_insert_with(|| graph.add_node(a));
         let nb = *nodes.entry(b).or_insert_with(|| graph.add_node(b));
         graph.add_edge(na, nb, ());
@@ -48,7 +50,7 @@ fn main() {
         // Second, assign workers to any available tasks (some may have become
         // available due to pruning).
         for node in graph2.externals(Incoming).sorted_by_key(|&n| graph2[n].id) {
-            if let None = graph2[node].worker {
+            if graph2[node].worker.is_none() {
                 graph2[node].worker = free_workers.pop();
             }
         }

@@ -1,5 +1,5 @@
 use advtools::prelude::Itertools;
-use advtools::input::iter_input_trim;
+use advtools::input;
 
 const SIZE: i32 = 375;
 
@@ -8,7 +8,7 @@ fn manhattan_dist((x1, y1): (i32, i32), (x2, y2): (i32, i32)) -> i32 {
 }
 
 fn main() {
-    let points = iter_input_trim::<(i32, i32)>(",").collect_vec();
+    let points = input::parse_vec::<(i32, i32)>();
 
     // Part 1: find size of largest finite area nearest to a single point.
     let mut area_sizes = vec![0; points.len()];

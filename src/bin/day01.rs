@@ -1,11 +1,11 @@
-use advtools::prelude::{Itertools, HashSet};
-use advtools::input::iter_input;
+use advtools::prelude::HashSet;
+use advtools::input;
 
 fn main() {
     // Let the helper library parse all lines and collect them.
-    let changes = iter_input::<i32>().collect_vec();
-    // The first part is perfect for a fold(), nothing special going on.
-    let freq1 = changes.iter().fold(0, |v, n| v + n);
+    let changes = input::parse_vec::<i32>();
+    // The first part is just a sum from 0, nothing special going on.
+    let freq1 = changes.iter().sum::<i32>();
     advtools::verify("First round", freq1, 513);
 
     let (mut freq2, mut seen) = (0, HashSet::new());

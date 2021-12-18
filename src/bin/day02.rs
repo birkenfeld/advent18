@@ -1,8 +1,8 @@
 use advtools::prelude::{Itertools, HashMap};
-use advtools::input::iter_lines;
+use advtools::input;
 
 fn main() {
-    let ids = iter_lines().collect_vec();
+    let ids = input::lines().collect_vec();
     let id_len = ids[0].len();
     // Using fold here lets us keep track of the doubles/triples state
     // in the iterator without mutable outer variables.

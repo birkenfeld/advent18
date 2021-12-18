@@ -1,10 +1,11 @@
 use advtools::prelude::{Itertools, HashSet, HashMap};
-use advtools::input::{iter_lines, to_u32, to_usize};
+use advtools::input;
 use priority_queue::PriorityQueue;
 
 const MODULO: u32 = 20183;
 const X_FACTOR: u32 = 16807;
 const Y_FACTOR: u32 = 48271;
+const FORMAT: &str = r"depth: (\d+)\ntarget: (\d+),(\d+)";
 
 #[derive(Clone, Copy, Hash, PartialEq, Eq)]
 enum Equip { Nothing, Lamp, Gear }
@@ -46,7 +47,7 @@ fn prio(add: u32, n1: Node, n2: Node) -> u32 {
 
 // Iterator over (existing) neighbor nodes.  The equipped gear is part of
 // the node, so there are two nodes per (y, x) square.
-fn neighbors<'a>(risk: &'a [Vec<Type>], (y, x, g): Node) -> impl Iterator<Item=Node> + 'a {
+fn neighbors(risk: &[Vec<Type>], (y, x, g): Node) -> impl Iterator<Item=Node> + '_ {
     vec![(y.wrapping_sub(1), x), (y, x.wrapping_sub(1)), (y+1, x), (y, x+1)]
         .into_iter().filter_map(move |(y1, x1)| if y1 < risk.len() && x1 < risk[0].len() {
             Some((y1, x1, transition(g, risk[y][x], risk[y1][x1])))
@@ -92,10 +93,7 @@ fn find_path(risk: &[Vec<Type>], start: Node, target: Node) -> u32 {
 }
 
 fn main() {
-    let mut input = iter_lines();
-    let depth = to_u32(input.next().unwrap().split_whitespace().nth(1).unwrap());
-    let (tx, ty) = input.next().unwrap().split_whitespace().nth(1).unwrap()
-        .split(",").map(to_usize).collect_tuple().unwrap();
+    let (depth, tx, ty) = input::rx_parse::<(u32, usize, usize)>(FORMAT);
 
     let mut index = vec![vec![0; tx+50]; ty+50];
     for y in 0..index.len() {

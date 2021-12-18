@@ -1,5 +1,5 @@
 use advtools::prelude::VecDeque;
-use advtools::input::iter_input_parts;
+use advtools::input;
 
 fn play(players: usize, last: u32) -> u32 {
     let mut scores = vec![0; players];
@@ -27,7 +27,7 @@ fn play(players: usize, last: u32) -> u32 {
 }
 
 fn main() {
-    let (players, last) = iter_input_parts([0, 6]).next().unwrap();
+    let (players, last) = input::rx_parse(r"(\d+)\D+(\d+)");
     advtools::verify("Normal", play(players, last), 388844);
     advtools::verify("100x longer", play(players, 100*last), 3212081616_u32);
 }

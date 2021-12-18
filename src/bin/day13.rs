@@ -1,8 +1,6 @@
 use advtools::prelude::HashSet;
-use advtools::input::input_string;
-use advtools::grid::{Grid, Dir, Pos};
-
-use Dir::*;
+use advtools::input;
+use advtools::grid::{Grid, Pos, Dir, Dir::*};
 
 struct Cart {
     id: usize,
@@ -14,7 +12,7 @@ struct Cart {
 fn main() {
     // Collect list of carts, and a map of tracks and current occupation.
     let mut carts = vec![];
-    let mut map = Grid::new(input_string().lines().enumerate().map(|(y, line)| {
+    let mut map = Grid::new(input::raw_string().lines().enumerate().map(|(y, line)| {
         line.chars().enumerate().map(|(x, c)| {
             let id = carts.len() + 1;
             let pos = Pos(x, y);

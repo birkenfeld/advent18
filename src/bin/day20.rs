@@ -1,5 +1,5 @@
 use advtools::prelude::{Itertools, HashSet};
-use advtools::input::input_string;
+use advtools::input;
 use advtools::grid::{Grid, Pos};
 
 const N: usize = 100;
@@ -82,7 +82,7 @@ fn count_doors(grid: &Grid<Doors>, doors: &mut Grid<u16>, pos: Pos, n: u16) {
 }
 
 fn main() {
-    let full_path = input_string();
+    let full_path = input::string();
     let start = Pos(N as i32/2, N as i32/2 + 1);
     // Grid that records for each room whether there is a door to the south
     // and the east direction.  (The other doors are covered by the adjacent
