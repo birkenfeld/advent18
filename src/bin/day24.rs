@@ -1,15 +1,11 @@
-use advtools::prelude::{Itertools, Regex, HashSet};
+use advtools::prelude::{Itertools, HashSet};
 use advtools::input;
-use once_cell::sync::Lazy;
 use strum_macros::EnumString;
 use std::cell::Cell;
 
-static FORMAT: Lazy<Regex> = Lazy::new(|| Regex::new(concat!(
-        r"(?P<units>\d+) units each with (?P<hp>\d+) hit points",
-        r"(?: \((?P<modifiers>.*?)\))? with an attack that does ",
-        r"(?P<dmg>\d+) (?P<dmgtype>\w+) damage at initiative (?P<init>\d+)"
-    )).unwrap()
-);
+const FORMAT: &str = "(\\d+) units each with (\\d+) hit points\
+                      (?: \\((.*?)\\))? with an attack that does \
+                      (\\d+) (\\w+) damage at initiative (\\d+)|(.*)";
 
 #[derive(Clone, Copy, Debug, Hash, PartialEq, Eq)]
 enum Side {
@@ -40,9 +36,8 @@ struct Group {
 }
 
 impl Group {
-    fn parse(line: &str, side: Side) -> Group {
-        let caps = FORMAT.captures(line).unwrap();
-        let mods = caps.name("modifiers").map_or("", |s| s.as_str());
+    fn parse(line: (i32, i32, &str, i32, &str, i32), side: Side) -> Group {
+        let (units, hp, mods, dmg, dmgtype, init) = line;
         let mut weak = HashSet::new();
         let mut immune = HashSet::new();
         for part in mods.split_terminator("; ") {
@@ -53,12 +48,9 @@ impl Group {
             }
         }
         Group {
-            side, weak, immune,
-            hp: input::to_i32(&caps["hp"]),
-            dmg: input::to_i32(&caps["dmg"]),
-            init: input::to_i32(&caps["init"]),
-            units: Cell::new(input::to_i32(&caps["units"])),
-            dmgtype: caps["dmgtype"].parse().unwrap(),
+            side, weak, immune, hp, dmg, init,
+            units: Cell::new(units),
+            dmgtype: dmgtype.parse().unwrap(),
         }
     }
     fn eff_power(&self) -> i32 {
@@ -108,12 +100,12 @@ fn fight(mut groups: Vec<Group>) -> (Option<Side>, i32) {
 }
 
 fn main() {
-    let mut input = input::lines();
+    let mut input = input::rx_lines::<Option<(i32, i32, &str, i32, &str, i32)>>(FORMAT);
     let mut groups = input.by_ref().skip(1)
-                                   .take_while(|&line| line != "Infection:")
-                                   .map(|s| Group::parse(s, Side::ImmuneSystem))
+                                   .take_while(|&line| line.is_some())
+                                   .map(|s| Group::parse(s.unwrap(), Side::ImmuneSystem))
                                    .collect_vec();
-    groups.extend(input.map(|s| Group::parse(s, Side::Infection)));
+    groups.extend(input.map(|s| Group::parse(s.unwrap(), Side::Infection)));
 
     let winning = fight(groups.clone()).1;
     advtools::verify("Units in winning army", winning, 16678);

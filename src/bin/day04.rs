@@ -45,7 +45,7 @@ fn main() {
         match action {
             "falls" => entry.events.push(Event { minute: min as u32, sleep: true }),
             "wakes" => entry.events.push(Event { minute: min as u32, sleep: false }),
-            num     => entry.guard = input::to_u32(num),
+            num     => entry.guard = num.parse().unwrap(),
         }
     }
     // Now, collect the "asleep minutes" for each guard over all days.
