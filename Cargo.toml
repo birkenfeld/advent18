@@ -10,8 +10,7 @@ name = "days"
 harness = false
 
 [dependencies]
-advtools = { version = "0.8.0", path = "../advtools" }
-petgraph = "0.6.0"
+advtools = { version = "0.9.0", path = "../advtools" }
 strum = "0.21.0"
 strum_macros = "0.21.1"
 priority-queue = "1.0.3"
